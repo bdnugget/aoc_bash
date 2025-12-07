@@ -15,9 +15,9 @@ main() {
 
       # apply rotation
       if [[ "$dir" == L ]]; then
-          dial=$(( dial - num ))
+        dial=$(( dial - num ))
       else
-          dial=$(( dial + num ))
+        dial=$(( dial + num ))
       fi
 
       # wrap into 0–99
@@ -25,9 +25,11 @@ main() {
 
       # count zero hits
       if (( dial == 0 )); then
-          ((count++))
+        ((count+=1))
       fi
-  done < example.txt
+
+  #done < example.txt
+  done < input.txt
 
   printf "%d\n" "$count"
 }
