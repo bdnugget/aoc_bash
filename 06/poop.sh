@@ -1,5 +1,5 @@
 #!/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
 trap 'echo "SHIEEEET at line $LINENO" >&2' ERR
 
