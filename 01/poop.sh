@@ -1,15 +1,18 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 set -Eeuo pipefail
 
-trap 'echo "SHIEEEET at line ${LINENO}" >&2' ERR
+trap 'printf "SHIEEEET at line %d: %s\n" "$LINENO" "$BASH_COMMAND" >&2' ERR
 
 # Advent of Code day 01
 
 main() {
-  dial=50
-  count=0
+  local dial=50
+  local count_exact_zero=0
+  local count_passed_zero=0
+  local prev dir num line
 
-  while read -r line; do
+  while IFS= read -r line; do
+      prev=$dial
       dir="${line:0:1}"
       num="${line:1}"
 
@@ -23,15 +26,28 @@ main() {
       # wrap into 0–99
       dial=$(( (dial % 100 + 100) % 100 ))
 
-      # count zero hits
+      # count zero hits (for part 1)
       if (( dial == 0 )); then
-        ((count+=1))
+        ((count_exact_zero+=1))
+      fi
+
+      # check if we passed 0 (for part 2)
+      if [[ "$dir" == L ]]; then
+          # moving left: crossed 0 if new dial < prev
+          if (( dial > prev )); then
+              ((count_passed_zero+=1))
+          fi
+      else
+      # moving right: crossed 0 if new dial < prev
+          if (( dial < prev )); then
+              ((count_passed_zero+=1))
+          fi
       fi
 
   #done < example.txt
   done < input.txt
 
-  printf "%d\n" "$count"
+  printf "P1 Exact zero: %d\nP2 Dial passed zero: %d\n" "$count_exact_zero" "$count_passed_zero"
 }
 
 main "$@"
